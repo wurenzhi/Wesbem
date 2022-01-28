@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from utils import *
+from .utils import *
 
 LF_dict = {}
 
@@ -20,6 +20,7 @@ def preprocess_name(x):
 @labeling_function
 def name_overlap(row):
     x, y = apply_to_xy(preprocess_name, row.name_l, row.name_r)
+    x, y = apply_to_xy(split_by_space, x, y)
     x, y = set(x), set(y)
     score = len(x.intersection(y)) / (min(len(x), len(y)))
     return decision_by_score(score, 0.1, 0.6)
@@ -27,7 +28,7 @@ def name_overlap(row):
 
 @labeling_function
 def name_word_overlap(row):
-    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_l)
+    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_r)
     x, y = find_pattern_xy(x, y, "\w{3,}")
     x, y = set(x), set(y)
     if len(x) == 0 or len(y) == 0:
@@ -38,8 +39,9 @@ def name_word_overlap(row):
 
 @labeling_function
 def name_number_overlap(row):
-    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_l)
+    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_r)
     x, y = find_pattern_xy(x, y, "\d+")
+    x, y = set(x), set(y)
     if len(x) == 0 or len(y) == 0:
         return 0
     score = len(x.intersection(y)) / (min(len(x), len(y)))
@@ -48,15 +50,20 @@ def name_number_overlap(row):
 
 @labeling_function
 def name_contain(row):
-    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_l)
+    x, y = apply_to_xy(to_str_lower, row.name_l, row.name_r)
     x = re.sub("\.0", "", x)
     y = re.sub("\.0", "", y)
     x, y = apply_to_xy(preprocess_name, x, y)
-    return decision_contain(x, y)
+    return decision_contain(x, y,val_no=0)
 
 
 @labeling_function
 def name_edit(row):
+    def preprocess_name(x):
+        x = to_str_lower(x)
+        x = re.sub("[\[\(].*[\]\)]", "", x)
+        x = re.sub("[^\w\d\s]", "", x)
+        return x
     x, y = apply_to_xy(preprocess_name, row.name_l, row.name_r)
     if lev.distance(x, y) / min(len(x), len(y)) < 0.1:
         return 1

@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from utils import *
+from .utils import *
 
 LF_dict = {}
 
@@ -336,7 +336,6 @@ def venue_score(row):
 
         x, y = apply_to_xy(process, x, y)
 
-        y = re.sub("[^\w\d\s]", " ", y)
         if len(x) == 0 or len(y) == 0:
             return np.nan, np.nan
         intersect = x.intersection(y)
@@ -389,12 +388,10 @@ def author_unmatch(row):
     elif lev_dist > 0.9 * min(len(x), len(y)):
         return -1
     else:
-        x = x.split(",")
-        y = y.split(",")
-        x = set(x)
-        y = set(y)
-        intersect = x.intersection(y)
-        score = len(intersect) / (max(len(x), len(y)))
+        x = x.split("#")
+        y = y.split("#")
+        x, y = set(x),set(y)
+        score = len(x.intersection(y)) / (max(len(x), len(y)))
         if score < 0.1:
             return -1
         elif score > 0.7:

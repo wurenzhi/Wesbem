@@ -26,8 +26,11 @@ def keep_digits(x):
     return x
 
 
-def split_by_space(x, s=" "):
-    x = str(x).split(s)
+def split_by_space(x, s=None):
+    if s is None:
+        x = str(x).split()
+    else:
+        x = str(x).split(s)
     return x
 
 
@@ -66,7 +69,7 @@ def decision_by_equal(x, y, val_equal=1, val_unequal=-1):
     if x == y:
         return val_equal
     else:
-        return -val_unequal
+        return val_unequal
 
 
 def overlap_score(row, attr):
@@ -79,7 +82,7 @@ def overlap_score(row, attr):
     y = re.sub("[\[\(].*[\]\)]", "", y)
     x = re.sub("[^\w\d\s]", " ", x)
     y = re.sub("[^\w\d\s]", " ", y)
-    x, y = split_by_space(x, y)
+    x, y = apply_to_xy(split_by_space,x, y)
     x = set(x)
     y = set(y)
     intersect = x.intersection(y)

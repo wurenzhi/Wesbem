@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from utils import *
+from .utils import *
 
 LF_dict = {}
 
@@ -132,9 +132,14 @@ def title_overlap_year_equal(row):
             return -1
         return 0
 
-
 @labeling_function
 def title_edit(row):
+    def preprocess_title(x):
+        x = to_str_lower(x)
+        x = x.replace("- book review", "")
+        x = re.sub("[\[\(].*[\]\)]", "", x)
+        x = re.sub("[^\w\d\s]", "", x)
+        return x
     x, y = apply_to_xy(preprocess_title, row.title_l, row.title_r)
     if len(x) == 0 or len(y) == 0:
         return 0
@@ -205,7 +210,6 @@ def year_small_diff2(row):
         return -1
     else:
         return 1
-
 
 @labeling_function
 def author_unmatch(row):

@@ -96,7 +96,6 @@ def addr_unmatch(row):
         return -1
     return 0
 
-
 @labeling_function
 def phone_match(row):
     x, y = apply_to_xy(to_str_lower, row.phone_l, row.phone_r)
@@ -115,7 +114,6 @@ def city_unmatch(row):
     if len(set(x).intersection(y)) == 0:
         return -1
     return 0
-
 
 @labeling_function
 def phone_area_code_unmatch(row):

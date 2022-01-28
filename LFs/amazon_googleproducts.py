@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from utils import *
+from .utils import *
 
 LF_dict = {}
 
@@ -54,7 +54,7 @@ def title_contain(row):
     x = re.sub("\.0", "", x)
     y = re.sub("\.0", "", y)
     x, y = apply_to_xy(preprocess_title, x, y)
-    return decision_contain(x, y)
+    return decision_contain(x, y,val_no=0)
 
 
 @labeling_function
@@ -68,10 +68,14 @@ def title_edit(row):
 
 @labeling_function
 def des_overlap(row):
-    x, y = apply_to_xy(preprocess_title, row.description_l, row.description_r)
+    def preprocess_des(x):
+        x = to_str_lower(x)
+        x = re.sub("[^\w\d\s]", " ", x)
+        return x
+    x, y = apply_to_xy(preprocess_des, row.description_l, row.description_r)
     if x == "nan" or y == "nan":
         return 0
-    x, y = apply_to_xy(to_str_lower, x, y)
+    x, y = apply_to_xy(split_by_space, x, y)
     x, y = set(x), set(y)
     score = len(x.intersection(y)) / (min(len(x), len(y)))
     if score > 0.8:
@@ -83,9 +87,8 @@ def des_overlap(row):
 @labeling_function
 def version_unmatch(row):
     x, y = apply_to_xy(preprocess_title, row.title_l, row.title_r)
-    vx = re.findall("\sv\s*(\d+)", x)
+    vx, vy = find_pattern_xy(x, y, "\sv\s*(\d+)")
     vx = vx + re.findall("\s(\d+)\s", x)
-    vy = re.findall("\sv\s*(\d+)", y)
     vy = vy + re.findall("\s(\d+)\s", y)
     x, y = set(vx), set(vy)
     if len(x) == 0 or len(y) == 0:

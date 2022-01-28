@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from utils import *
+from .utils import *
 
 LF_dict = {}
 
