@@ -1,5 +1,5 @@
 import Levenshtein as lev
-from .utils import *
+from .LF_utils import *
 
 LF_dict = {}
 
@@ -129,7 +129,7 @@ def title_num_overlap(row):
 
 @labeling_function
 def screen_size_unmatch(row):
-    x, y = apply_to_xy(to_str_lower, row.screen_size_l, row.screen_size_r)
+    x, y = apply_to_xy(to_str_lower, row.screen_size_diagonal_l, row.screen_size_diagonal_r)
     x, y = find_pattern_xy(x, y, "\d+")
     x, y = set(x), set(y)
     if len(x) == 0 or len(y) == 0:

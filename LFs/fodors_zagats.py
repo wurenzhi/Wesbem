@@ -1,7 +1,7 @@
 import re
 import Levenshtein as lev
 
-from .utils import *
+from .LF_utils import *
 
 LF_dict = {}
 
