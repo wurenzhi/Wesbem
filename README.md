@@ -1,7 +1,7 @@
 # Wesbem: Weak Supervision Benchmark for Entity Matching
 This repository provides labeling functions for seven common entity matching datasets and helper functions to evaluate different labeling models (truth inference methods).
 
-##How to use
+## How to use
 1. Read the candidate set of one dataset e.g. fodors_zagats.
 ```python
 dataset = "fodors_zagats"
