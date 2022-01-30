@@ -33,3 +33,7 @@ scores = eval_score(y_pred, y_gt)
 print(scores)
 ```
 
+## Acknowledgment
+The datasets dblp_acm, dblp_scholar, amazon_googleproducts and abt_buy are from [DB Group Leipzig](https://dbs.uni-leipzig.de/en/research/projects/object_matching/benchmark_datasets_for_entity_resolution). The datasets monitor and camera are from the [Alaska Benchmark](https://github.com/merialdo/research.alaska).
+
+
